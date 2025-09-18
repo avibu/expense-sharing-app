@@ -5,8 +5,311 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Sharing App</title>
     <style>
-        /* CSS is unchanged, so I've collapsed it for brevity. Your styles are perfectly fine. */
-        * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; } .container { max-width: 1400px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px); } h1 { text-align: center; color: #333; margin-bottom: 30px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); } .tabs { display: flex; background: #f8f9fa; border-radius: 10px; margin-bottom: 30px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); } .tab { flex: 1; padding: 15px 20px; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #666; transition: all 0.3s ease; position: relative; } .tab.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; transform: translateY(-2px); } .tab:hover:not(.active) { background: #e9ecef; color: #333; } .section { display: none; animation: fadeIn 0.5s ease-in; } .section.active { display: block; } @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .form-section { background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 5px solid #667eea; } .form-section h3 { margin-bottom: 20px; color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; } .form-row { display: flex; gap: 15px; margin-bottom: 15px; align-items: end; } .form-group { flex: 1; } label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; } input, select, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; transition: all 0.3s ease; } input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); } button { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; } button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3); } .btn-danger { background: linear-gradient(135deg, #dc3545, #c82333); } .btn-danger:hover { box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3); } table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); } th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; } th { background: linear-gradient(135deg, #667eea, #764ba2); color: white; font-weight: 600; text-transform: uppercase; font-size: 0.9em; letter-spacing: 0.5px; } tr:hover:not(:first-child) { background-color: #f5f5f5; transform: translateY(-1px); transition: all 0.3s ease; } .amount { font-weight: bold; text-align: right; } .positive { color: #28a745; } .negative { color: #dc3545; } .settlement-row { background: #e8f5e8 !important; border-left: 4px solid #28a745; } .settlement-row:hover { background: #d4edda !important; } .total-row { background: #e3f2fd !important; font-weight: bold; border-top: 2px solid #667eea; } .action-btn { padding: 6px 12px; font-size: 0.9em; margin: 0 2px; } .sub-amount { display: block; font-size: 0.8em; color: #666; font-weight: normal; } .empty-state { text-align: center; padding: 60px 20px; color: #666; } .empty-state i { font-size: 4em; margin-bottom: 20px; display: block; } .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; } .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; } .stat-value { font-size: 2em; font-weight: bold; color: #667eea; } .stat-label { color: #666; font-size: 0.9em; margin-top: 5px; } .notification { position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: translateX(400px); transition: transform 0.3s ease; z-index: 1000; } .notification.error { background: #dc3545; } .notification.show { transform: translateX(0); } .currency { font-weight: bold; } @media (max-width: 768px) { .form-row { flex-direction: column; } .tabs { flex-direction: column; } .container { padding: 15px; } h1 { font-size: 2em; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+            color: #333;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .form-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover:not(:first-child) {
+            background-color: #f5f5f5;
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+        
+        .amount {
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .positive {
+            color: #28a745;
+        }
+        
+        .negative {
+            color: #dc3545;
+        }
+        
+        .settlement-row {
+            background: #e8f5e8 !important;
+            border-left: 4px solid #28a745;
+        }
+        
+        .settlement-row:hover {
+            background: #d4edda !important;
+        }
+        
+        .total-row {
+            background: #e3f2fd !important;
+            font-weight: bold;
+            border-top: 2px solid #667eea;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.9em;
+            margin: 0 2px;
+        }
+
+        .sub-amount {
+            display: block;
+            font-size: 0.8em;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .currency {
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -27,8 +330,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="exchangeRate">Current Exchange Rate (1€ to ₪)</label>
-                        <!-- FIREBASE: The onchange now calls `updateDataInFirestore` -->
-                        <input type="number" id="exchangeRate" step="0.01" value="4.00" onchange="updateDataInFirestore()">
+                        <input type="number" id="exchangeRate" step="0.01" value="4.00" onchange="updateExchangeRate()">
                     </div>
                 </div>
                 <div class="form-row">
@@ -126,32 +428,27 @@
     
     <div id="notification" class="notification"></div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
-    
     <script>
-        // FIREBASE: Your Firebase project configuration. 
-        // IMPORTANT: Ensure you have enabled Firestore in your Firebase project.
+
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Replace with your actual config
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyBex2AySrHexpOg_RwT5ECWvcz8mnu9CYw", // This is safe to expose
+            authDomain: "expense-sharing-app-b6bc3.firebaseapp.com",
+            projectId: "expense-sharing-app-b6bc3",
+            storageBucket: "expense-sharing-app-b6bc3.appspot.com",
+            messagingSenderId: "437332551742",
+            appId: "1:437332551742:web:4797ffa95422afa38f096f"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        // A reference to the single document that will store our app's state
+        const appDataRef = db.collection('appState').doc('main');
 
-        // FIREBASE: Define a reference to our single data document in Firestore.
-        // We will store all app data (participants, expenses, rate) in one document
-        // for simplicity, similar to how it was in one localStorage item.
-        const appDataRef = db.collection('expenseGroups').doc('mainGroup');
-
-        // This default data is now only used to initialize the database if it's empty.
+        // This is your hardcoded production data. It will only be used ONCE
+        // to seed the database if it's empty.
         const defaultData = {
             rate: 4.0,
             participants: ['Avi', 'Aviv', 'Emil', 'Maor', 'Raz'],
@@ -161,51 +458,216 @@
                 { id: 3, date: '2025-09-10', payer: 'Raz', amount: 320.00, description: 'מלון לילה ראשון', amountILS: null },
                 { id: 4, date: '2025-09-11', payer: 'Avi', amount: 14.00, description: 'סופר ביום השני', amountILS: null },
                 { id: 5, date: '2025-09-11', payer: 'Maor', amount: 22.10, description: 'בית קפה ביום השני', amountILS: null },
-            ] // Abridged for brevity
+                { id: 6, date: '2025-09-11', payer: 'Maor', amount: 13.00, description: 'גלידות וניל', amountILS: null },
+                { id: 7, date: '2025-09-11', payer: 'Avi', amount: 25.00, description: 'בירות ביום השני', amountILS: null },
+                { id: 8, date: '2025-09-12', payer: 'Aviv', amount: 60.00, description: 'ארוחות בוקר ביום השלישי', amountILS: null },
+                { id: 9, date: '2025-09-12', payer: 'Maor', amount: 137.00, description: 'סימולטורים', amountILS: null },
+                { id: 10, date: '2025-09-12', payer: 'Emil', amount: 11.40, description: 'גלידות', amountILS: null },
+                { id: 11, date: '2025-09-12', payer: 'Emil', amount: 16.00, description: 'משקאות', amountILS: null },
+                { id: 12, date: '2025-09-13', payer: 'Aviv', amount: 20.00, description: 'כדורסל גנבים', amountILS: null },
+                { id: 13, date: '2025-09-13', payer: 'Emil', amount: 436.00, description: 'מלון Baden Baden', amountILS: null },
+                { id: 14, date: '2025-09-13', payer: 'Avi', amount: 117.00, description: 'מסעדה איטלקית באדן באדן', amountILS: null },
+                { id: 15, date: '2025-09-13', payer: 'Maor', amount: 20.00, description: 'בירות במלון באדן באדן', amountILS: null },
+                { id: 16, date: '2025-09-14', payer: 'Aviv', amount: 30.00, description: 'מוזיאון פורשה', amountILS: null },
+                { id: 17, date: '2025-09-14', payer: 'Avi', amount: 78.00, description: 'בריכות', amountILS: null },
+                { id: 18, date: '2025-09-14', payer: 'Maor', amount: 474.06, description: 'מלונות Motor World', amountILS: null },
+                { id: 19, date: '2025-09-14', payer: 'Aviv', amount: 97.90, description: 'פיצות אצל הארמני', amountILS: null },
+                { id: 20, date: '2025-09-14', payer: 'Aviv', amount: 438.00, description: 'מלון פרייבורג', amountILS: null },
+                { id: 21, date: '2025-09-14', payer: 'Aviv', amount: 222.51, description: 'Airbnb', amountILS: null }
+            ]
         };
         
         // Main data storage. This object will be kept in sync with Firestore.
         let data = { participants: [], expenses: [], rate: 4.0 };
         let isILSEditedManually = false;
 
-        // --- FIREBASE: DATA SYNCHRONIZATION ---
+        // --- NEW: REAL-TIME DATA HANDLING ---
 
-        // FIREBASE: This function replaces saveData(). It writes the current state of the 'data' object to Firestore.
-        async function updateDataInFirestore() {
-            // Update the rate in our local data object from the input field before saving.
-            data.rate = parseFloat(document.getElementById('exchangeRate').value) || 4.0;
-            try {
-                await appDataRef.set(data);
-                // We don't need to call rendering functions here anymore, 
-                // because the onSnapshot listener will do it automatically.
-            } catch (error) {
-                console.error("Error updating data in Firestore: ", error);
-                showNotification("Failed to save data. Please check connection.", "error");
-            }
+        // This function sets up the real-time listener.
+        function setupRealtimeListener() {
+            appDataRef.onSnapshot(doc => {
+                if (doc.exists) {
+                    // If the document exists, update our local data object
+                    data = doc.data();
+                    console.log("Data loaded from Firebase:", data);
+                    // Refresh the entire UI with the new data
+                    refreshAllUI();
+                } else {
+                    // If the document doesn't exist, this is the first time running the app.
+                    // We will upload the default production data.
+                    console.log("No data found in Firebase. Initializing with default data...");
+                    initializeDatabaseWithDefaultData();
+                }
+            }, err => {
+                console.error("Error fetching data from Firebase:", err);
+                showNotification("Could not connect to the database. Please check your connection.", 'error');
+            });
         }
 
-        // FIREBASE: This is the central function that updates the entire UI.
-        // It's called whenever data is fetched from Firestore.
-        function updateUI() {
-            // Update the exchange rate input with the value from our data
+        // This function is called ONLY ONCE if the database is empty.
+        function initializeDatabaseWithDefaultData() {
+            appDataRef.set(defaultData)
+                .then(() => {
+                    showNotification("Database initialized successfully!", 'success');
+                    // The onSnapshot listener will automatically pick up this new data and render it.
+                })
+                .catch(err => {
+                    console.error("Error initializing database:", err);
+                    showNotification("Failed to initialize the database.", 'error');
+                });
+        }
+        
+        // A central function to refresh all parts of the UI.
+        // This is called whenever data is updated from Firebase.
+        function refreshAllUI() {
             document.getElementById('exchangeRate').value = data.rate || 4.0;
-            
-            // Update all parts of the application
             updateParticipantDropdown();
             
-            // Re-render the content of the currently active tab
+            // Determine which tab is currently active to refresh its content
             const activeTabId = document.querySelector('.tab.active').getAttribute('onclick').match(/'([^']+)'/)[1];
-            switch(activeTabId) {
-                case 'expenses': renderExpenses(); updateExpenseStats(); break;
-                case 'summary': renderSummary(); break;
-                case 'settlement': renderSettlement(); break;
-                case 'participants': renderParticipants(); break;
+            
+            // Refresh all data views in the background
+            renderExpenses();
+            updateExpenseStats();
+            renderSummary();
+            renderSettlement();
+            renderParticipants();
+
+            // Make sure the correct tab is visible
+            showTab(activeTabId, document.querySelector(`.tab[onclick*="'${activeTabId}'"]`), true);
+        }
+
+        // --- MODIFIED DATA MODIFICATION FUNCTIONS ---
+        // These functions now write directly to Firebase instead of a local variable.
+
+        async function addParticipant() {
+            const nameInput = document.getElementById('participantName');
+            const name = nameInput.value.trim();
+            if (!name) {
+                showNotification('Please enter a participant name', 'error');
+                return;
+            }
+            if (data.participants.map(p => p.toLowerCase()).includes(name.toLowerCase())) {
+                showNotification('Participant already exists', 'error');
+                return;
+            }
+            
+            // Atomically add the new name to the 'participants' array in Firestore.
+            try {
+                await appDataRef.update({
+                    participants: firebase.firestore.FieldValue.arrayUnion(name)
+                });
+                nameInput.value = '';
+                showNotification(`${name} added successfully!`);
+                // UI will update automatically via the onSnapshot listener.
+            } catch (err) {
+                console.error("Error adding participant:", err);
+                showNotification("Failed to add participant.", 'error');
             }
         }
 
-        // --- All other functions remain the same, but now call `updateDataInFirestore()` ---
-        
-        // Show notification
+        async function removeParticipant(nameToRemove) {
+            if (confirm(`Are you sure you want to remove ${nameToRemove}? This will also remove all their expenses.`)) {
+                // Filter out expenses paid by the removed participant
+                const updatedExpenses = data.expenses.filter(e => e.payer !== nameToRemove);
+                
+                try {
+                    // Update both the participants and expenses arrays in one go.
+                    await appDataRef.update({
+                        participants: firebase.firestore.FieldValue.arrayRemove(nameToRemove),
+                        expenses: updatedExpenses
+                    });
+                    showNotification(`${nameToRemove} removed successfully!`);
+                    // UI will update automatically.
+                } catch (err) {
+                    console.error("Error removing participant:", err);
+                    showNotification("Failed to remove participant.", 'error');
+                }
+            }
+        }
+
+        async function addExpense() {
+            const date = document.getElementById('expenseDate').value;
+            const payer = document.getElementById('expensePayer').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const description = document.getElementById('expenseDescription').value.trim();
+            const amountILS = parseFloat(document.getElementById('expenseAmountILS').value);
+            
+            if (!date || !payer || isNaN(amount) || !description || amount <= 0) {
+                showNotification('Please fill all fields with valid data', 'error');
+                return;
+            }
+            
+            const nextId = (data.expenses.length > 0 ? Math.max(...data.expenses.map(e => e.id)) : 0) + 1;
+            const newExpense = { id: nextId, date, payer, amount, description, amountILS: isNaN(amountILS) ? null : amountILS };
+
+            try {
+                await appDataRef.update({
+                    expenses: firebase.firestore.FieldValue.arrayUnion(newExpense)
+                });
+
+                document.getElementById('expensePayer').value = '';
+                document.getElementById('expenseAmount').value = '';
+                document.getElementById('expenseDescription').value = '';
+                document.getElementById('expenseAmountILS').value = '';
+                
+                resetManualEditFlag();
+                showNotification('Expense added successfully!');
+                // UI will update automatically.
+            } catch (err) {
+                console.error("Error adding expense:", err);
+                showNotification("Failed to add expense.", 'error');
+            }
+        }
+
+        async function removeExpense(id) {
+            if (confirm('Are you sure you want to remove this expense?')) {
+                const updatedExpenses = data.expenses.filter(e => e.id !== id);
+                try {
+                    await appDataRef.update({ expenses: updatedExpenses });
+                    showNotification('Expense removed successfully!');
+                    // UI will update automatically.
+                } catch (err) {
+                    console.error("Error removing expense:", err);
+                    showNotification("Failed to remove expense.", 'error');
+                }
+            }
+        }
+
+        async function updateILSAmount(expenseId, newAmount) {
+            const updatedExpenses = data.expenses.map(e => {
+                if (e.id === expenseId) {
+                    return { ...e, amountILS: newAmount ? parseFloat(newAmount) : null };
+                }
+                return e;
+            });
+
+            try {
+                await appDataRef.update({ expenses: updatedExpenses });
+                showNotification('ILS amount updated!', 'success');
+                // UI will update automatically.
+            } catch (err) {
+                console.error("Error updating ILS amount:", err);
+                showNotification("Failed to update ILS amount.", 'error');
+            }
+        }
+
+        async function updateExchangeRate() {
+            const newRate = parseFloat(document.getElementById('exchangeRate').value) || 4.0;
+            try {
+                await appDataRef.update({ rate: newRate });
+                showNotification('Exchange rate updated!', 'success');
+                // UI will update automatically.
+            } catch (err) {
+                console.error("Error updating exchange rate:", err);
+                showNotification("Failed to update exchange rate.", 'error');
+            }
+        }
+
+        // --- UNCHANGED HELPER AND RENDER FUNCTIONS ---
+        // These functions work perfectly as they are, since they read from the global 'data' object
+        // which is now being kept in sync by Firebase.
+
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -221,11 +683,7 @@
                 const rate = parseFloat(document.getElementById('exchangeRate').value) || 0;
                 const euroAmount = parseFloat(document.getElementById('expenseAmount').value) || 0;
                 const ilsInput = document.getElementById('expenseAmountILS');
-                if (rate > 0 && euroAmount > 0) {
-                    ilsInput.value = (euroAmount * rate).toFixed(2);
-                } else {
-                    ilsInput.value = '';
-                }
+                ilsInput.value = (rate > 0 && euroAmount > 0) ? (euroAmount * rate).toFixed(2) : '';
             }
         }
 
@@ -237,42 +695,16 @@
             isILSEditedManually = false;
         }
         
-        // Tab switching logic is unchanged
-        function showTab(tabName, element) {
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            element.classList.add('active');
-            updateUI(); // Re-render the correct content when switching tabs
+        function showTab(tabName, element, isRefresh = false) {
+            if (!isRefresh) {
+                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabName).classList.add('active');
+                element.classList.add('active');
+            }
+            // Logic to render content is now handled by refreshAllUI on data change.
         }
         
-        // --- PARTICIPANTS ---
-        async function addParticipant() {
-            const nameInput = document.getElementById('participantName');
-            const name = nameInput.value.trim();
-            if (!name) {
-                showNotification('Please enter a participant name', 'error');
-                return;
-            }
-            if (data.participants.map(p => p.toLowerCase()).includes(name.toLowerCase())) {
-                showNotification('Participant already exists', 'error');
-                return;
-            }
-            data.participants.push(name);
-            nameInput.value = '';
-            await updateDataInFirestore(); // FIREBASE: Save changes
-            showNotification(`${name} added successfully!`);
-        }
-        
-        async function removeParticipant(nameToRemove) {
-            if (confirm(`Are you sure you want to remove ${nameToRemove}? This will also remove all their expenses.`)) {
-                data.participants = data.participants.filter(p => p !== nameToRemove);
-                data.expenses = data.expenses.filter(e => e.payer !== nameToRemove);
-                await updateDataInFirestore(); // FIREBASE: Save changes
-                showNotification(`${nameToRemove} removed successfully!`);
-            }
-        }
-
         function renderParticipants() {
             const container = document.getElementById('participantsTable');
             if (!data.participants || data.participants.length === 0) {
@@ -292,52 +724,9 @@
                 </table>`;
         }
         
-        // --- EXPENSES ---
-        async function addExpense() {
-            const date = document.getElementById('expenseDate').value;
-            const payer = document.getElementById('expensePayer').value;
-            const amount = parseFloat(document.getElementById('expenseAmount').value);
-            const description = document.getElementById('expenseDescription').value.trim();
-            const amountILS = parseFloat(document.getElementById('expenseAmountILS').value);
-            
-            if (!date || !payer || isNaN(amount) || !description || amount <= 0) {
-                showNotification('Please fill in all fields correctly.', 'error');
-                return;
-            }
-            
-            const nextId = (data.expenses.length > 0 ? Math.max(...data.expenses.map(e => e.id)) : 0) + 1;
-            data.expenses.push({ id: nextId, date, payer, amount, description, amountILS: isNaN(amountILS) ? null : amountILS });
-            
-            document.getElementById('expensePayer').value = '';
-            document.getElementById('expenseAmount').value = '';
-            document.getElementById('expenseDescription').value = '';
-            document.getElementById('expenseAmountILS').value = '';
-            
-            resetManualEditFlag();
-            await updateDataInFirestore(); // FIREBASE: Save changes
-            showNotification('Expense added successfully!');
-        }
-        
-        async function removeExpense(id) {
-            if (confirm('Are you sure you want to remove this expense?')) {
-                data.expenses = data.expenses.filter(e => e.id !== id);
-                await updateDataInFirestore(); // FIREBASE: Save changes
-                showNotification('Expense removed successfully!');
-            }
-        }
-
-        async function updateILSAmount(expenseId, newAmount) {
-            const expense = data.expenses.find(e => e.id === expenseId);
-            if (expense) {
-                expense.amountILS = newAmount ? parseFloat(newAmount) : null;
-                await updateDataInFirestore(); // FIREBASE: Save changes
-                showNotification('ILS amount updated!', 'success');
-            }
-        }
-        
         function renderExpenses() {
             const container = document.getElementById('expensesTable');
-             if (!data.expenses || data.expenses.length === 0) {
+            if (!data.expenses || data.expenses.length === 0) {
                 container.innerHTML = `<div class="empty-state"><i>📝</i><h3>No expenses yet</h3><p>Add your first expense using the form above.</p></div>`;
                 return;
             }
@@ -388,7 +777,6 @@
             return 0;
         }
 
-        // --- CALCULATIONS & SUMMARY (No changes to logic) ---
         function calculateBalances() {
             const totals = {};
             const totalsILS = {}; 
@@ -396,17 +784,21 @@
                 totals[p] = 0;
                 totalsILS[p] = 0;
             });
+
             data.expenses.forEach(expense => {
                 if (totals.hasOwnProperty(expense.payer)) {
                     totals[expense.payer] += expense.amount;
                     totalsILS[expense.payer] += getExpenseILS(expense);
                 }
             });
+
             const totalExpenses = data.expenses.reduce((sum, exp) => sum + exp.amount, 0);
             const totalExpensesILS = data.expenses.reduce((sum, exp) => sum + getExpenseILS(exp), 0);
+
             const participantCount = data.participants.length;
             const equalShare = participantCount > 0 ? totalExpenses / participantCount : 0;
             const equalShareILS = participantCount > 0 ? totalExpensesILS / participantCount : 0;
+
             const balances = data.participants.map(p => {
                 const paid = totals[p] || 0;
                 const paidILS = totalsILS[p] || 0;
@@ -418,17 +810,19 @@
                     balanceILS: paidILS - equalShareILS
                 };
             });
+            
             return { balances, totalExpenses, equalShare, totalExpensesILS, equalShareILS };
         }
 
         function renderSummary() {
             const { balances, totalExpenses, equalShare, totalExpensesILS, equalShareILS } = calculateBalances();
-            document.getElementById('summaryTotal').innerHTML = `${formatCurrency(totalExpenses)}${formatSubCurrency(totalExpensesILS)}`;
+            
+            document.getElementById('summaryTotal').innerHTML = `${formatCurrency(totalExpenses)} ${formatSubCurrency(totalExpensesILS)}`;
             document.getElementById('participantCount').textContent = data.participants.length;
-            document.getElementById('equalShare').innerHTML = `${formatCurrency(equalShare)}${formatSubCurrency(equalShareILS)}`;
+            document.getElementById('equalShare').innerHTML = `${formatCurrency(equalShare)} ${formatSubCurrency(equalShareILS)}`;
             
             const container = document.getElementById('summaryTable');
-             if (!balances || balances.length === 0) {
+            if (balances.length === 0) {
                 container.innerHTML = `<div class="empty-state"><i>📊</i><h3>No summary to show</h3><p>Add participants and expenses first.</p></div>`;
                 return;
             }
@@ -439,8 +833,8 @@
                         ${balances.map(b => `
                             <tr>
                                 <td><strong>${b.name}</strong></td>
-                                <td class="amount">${formatCurrency(b.paid)}${formatSubCurrency(b.paidILS)}</td>
-                                <td class="amount">${formatCurrency(equalShare)}${formatSubCurrency(equalShareILS)}</td>
+                                <td class="amount">${formatCurrency(b.paid)} ${formatSubCurrency(b.paidILS)}</td>
+                                <td class="amount">${formatCurrency(equalShare)} ${formatSubCurrency(equalShareILS)}</td>
                                 <td class="amount ${b.balance >= 0 ? 'positive' : 'negative'}">
                                     ${b.balance >= 0 ? '+' : '-'}${formatCurrency(b.balance)}
                                     ${formatSubCurrency(b.balanceILS, b.balanceILS >= 0 ? '+' : '-')}
@@ -451,22 +845,24 @@
                 </table>`;
         }
 
-        // --- SETTLEMENT (No changes to logic) ---
         function calculateSettlement() {
             const { balances } = calculateBalances();
             const creditors = balances.filter(b => b.balance > 0.01).sort((a, b) => b.balance - a.balance);
             const debtors = balances.filter(b => b.balance < -0.01).sort((a, b) => a.balance - b.balance);
             const settlements = [];
+            
             let i = 0, j = 0;
             while (i < creditors.length && j < debtors.length) {
                 const creditor = creditors[i];
                 const debtor = debtors[j];
                 const amount = Math.min(creditor.balance, Math.abs(debtor.balance));
+                
                 if (amount > 0.01) {
                     settlements.push({ from: debtor.name, to: creditor.name, amount });
                     creditor.balance -= amount;
                     debtor.balance += amount;
                 }
+                
                 if (Math.abs(creditor.balance) < 0.01) i++;
                 if (Math.abs(debtor.balance) < 0.01) j++;
             }
@@ -477,6 +873,7 @@
             const settlements = calculateSettlement();
             const { totalExpenses, totalExpensesILS } = calculateBalances();
             const averageRate = (totalExpenses > 0 && totalExpensesILS > 0) ? totalExpensesILS / totalExpenses : 0;
+
             const container = document.getElementById('settlementTable');
             if (settlements.length === 0) {
                 container.innerHTML = `<div class="empty-state"><i>🤝</i><h3>All settled!</h3><p>No payments are needed.</p></div>`;
@@ -504,7 +901,6 @@
                 </table>`;
         }
 
-        // --- UTILS & INITIALIZATION ---
         function updateParticipantDropdown() {
             const dropdown = document.getElementById('expensePayer');
             dropdown.innerHTML = '<option value="">Select participant...</option>';
@@ -526,38 +922,14 @@
             return `<span class="sub-amount">${prefix}₪${Math.abs(amount).toFixed(2)}</span>`;
         }
         
-        // --- PAGE LOAD ---
+        // Initial setup when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             // Set default date to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('expenseDate').value = today;
             
-            // FIREBASE: This is the magic! Listen for real-time updates.
-            // This replaces the old loadData() function entirely.
-            appDataRef.onSnapshot(async (doc) => {
-                console.log("Received data update from Firestore.");
-                if (doc.exists) {
-                    // If the document exists, load its data
-                    data = doc.data();
-                } else {
-                    // First time running? Document doesn't exist.
-                    // Let's create it with the default data.
-                    console.log("No data found in Firestore. Initializing with default data.");
-                    data = defaultData;
-                    await updateDataInFirestore(); // This will create the document
-                }
-                
-                // Ensure data object has all necessary keys to prevent errors
-                if (!data.participants) data.participants = [];
-                if (!data.expenses) data.expenses = [];
-                if (!data.rate) data.rate = 4.0;
-
-                // Now that we have the latest data, update the entire UI.
-                updateUI();
-            }, (error) => {
-                console.error("Error listening to data:", error);
-                showNotification("Could not connect to the database.", "error");
-            });
+            // Start listening for real-time updates from Firebase
+            setupRealtimeListener();
         });
     </script>
 </body>
